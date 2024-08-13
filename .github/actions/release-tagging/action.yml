@@ -42,9 +42,9 @@ runs:
 
       if [ -z "$tags" ]; then
         echo "No tags found."
-        if [ "${{ inputs.version_format }}" = "single" ]; then
+        if [ "$version_format" = "single" ]; then
           tag="v1"
-        elif [ "${{ inputs.version_format }}" = "major.minor" ]; then
+        elif [ "$version_format" = "major.minor" ]; then
           tag="v1.0"
         else
           echo "Invalid version format specified."
@@ -55,7 +55,7 @@ runs:
         echo "::set-output name=new_tag::$tag"
       else
         remote_tags="$(git ls-remote --tags origin | grep 'refs/tags/' | grep -v '\^{}' | awk -F'/' '{print $NF}' | sort -V | tail -n 1)"
-        echo "$remote_tags"
+        echo "Latest remote tag: $remote_tags"
 
         is_major_minor=null
         if [[ "$remote_tags" =~ ^v[0-9]+\.[0-9]+$ ]]; then
@@ -64,8 +64,9 @@ runs:
           is_major_minor=false
         else
           echo "The tag $remote_tags does not match expected formats."
+          exit 1
         fi
-        echo "$is_major_minor"
+        echo "is_major_minor: $is_major_minor"
 
         # Function to increment the major version
         increment_major_version() {
@@ -106,9 +107,8 @@ runs:
           fi
         fi        
 
-        echo "$new_tag"
+        echo "New tag: $new_tag"
 
       fi
     shell: bash
-
 
