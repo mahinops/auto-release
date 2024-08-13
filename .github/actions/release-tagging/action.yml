@@ -67,6 +67,14 @@ runs:
         fi
         echo "$is_major_minor"
 
+        # Function to increment the major version
+        increment_major_version() {
+          local tag="$1"
+          local major=$(echo "$tag" | sed -E 's/v([0-9]+).*/\1/')
+          local new_major=$((major + 1))
+          echo "v$new_major"
+        }
+
         # Function to convert major.minor format to single format and increment major
         convert_major_minor_to_single() {
           local tag="$1"
