@@ -16,5 +16,6 @@ jobs:
         with:
           user_email: 'mokhlesurr031@gmail.com'
           user_name: 'mokhlesurr031'
+          version_format: 'single'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
