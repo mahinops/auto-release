@@ -54,7 +54,7 @@ runs:
         git push origin "$tag"
         echo "::set-output name=new_tag::$tag"
       else
-        echo "$tag"
+        echo "$tags"
         echo "Tags found. Skipping initial tag creation."
 
       fi
