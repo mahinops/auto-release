@@ -38,7 +38,8 @@ runs:
     run: |
       echo ${{ inputs.release_type }}
       echo ${{ inputs.version_format }}
-      tags=$(git ls-remote --tags origin | grep 'refs/tags/' | awk -F'/' '{print $NF}' | sort -V | tail -n 1)
+      tags=$(git ls-remote --tags origin | grep 'refs/tags/' | grep -v '\^{}' | awk -F'/' '{print $NF}' | sort -V | tail -n 1)
+
 
       if [ -z "$tags" ]; then
         echo "No tags found."
