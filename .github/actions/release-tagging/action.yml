@@ -36,6 +36,8 @@ runs:
   - name: Check for Existing Tags and Create
     id: check_tags
     run: |
+      echo ${{ inputs.release_type }}
+      echo ${{ inputs.version_format }}
       tags=$(git ls-remote --tags origin)
       if [ -z "$tags" ]; then
         echo "No tags found."
