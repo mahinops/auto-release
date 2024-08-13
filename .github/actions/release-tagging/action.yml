@@ -37,7 +37,7 @@ runs:
     id: check_tags
     run: |
       echo ${{ inputs.release_type }}
-      echo ${{ inputs.version_format }}
+      version_format=${{ inputs.version_format }}
       tags=$(git ls-remote --tags origin)
 
       if [ -z "$tags" ]; then
