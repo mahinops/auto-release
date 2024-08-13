@@ -38,8 +38,7 @@ runs:
     run: |
       echo ${{ inputs.release_type }}
       echo ${{ inputs.version_format }}
-      tags=$(git ls-remote --tags origin | grep 'refs/tags/' | grep -v '\^{}' | awk -F'/' '{print $NF}' | sort -V | tail -n 1)
-
+      tags=$(git ls-remote --tags origin)
 
       if [ -z "$tags" ]; then
         echo "No tags found."
@@ -55,7 +54,8 @@ runs:
         git push origin "$tag"
         echo "::set-output name=new_tag::$tag"
       else
-        echo "$tags"
+        remote_tags="$(git ls-remote --tags origin | grep 'refs/tags/' | grep -v '\^{}' | awk -F'/' '{print $NF}' | sort -V | tail -n 1)"
+        echo "$remote_tags"
         echo "Tags found. Skipping initial tag creation."
 
       fi
