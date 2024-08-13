@@ -39,8 +39,22 @@ runs:
       echo ${{ inputs.release_type }}
       echo ${{ inputs.version_format }}
       tags=$(git ls-remote --tags origin)
+
       if [ -z "$tags" ]; then
         echo "No tags found."
+        if [ "${{ inputs.version_format }}" = "single" ]; then
+          tag="v1"
+        elif [ "${{ inputs.version_format }}" = "major.minor" ]; then
+          tag="v1.0"
+        else
+          echo "Invalid version format specified."
+          exit 1
+        fi
+        git tag -a "$tag" -m "Initial release"
+        git push origin "$tag"
+        echo "::set-output name=new_tag::$tag"
+      else
+        echo "Tags found. Skipping initial tag creation."
       fi
     shell: bash
 
