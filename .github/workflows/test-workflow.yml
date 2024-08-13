@@ -1,0 +1,17 @@
+name: Release Workflow
+on: [push]
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Release Tagging
+        uses: ./.github/actions/release-tagging
+        with:
+          user_email: 'mokhlesurr031@gmail.com'
+          user_name: 'mokhlesurr031'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

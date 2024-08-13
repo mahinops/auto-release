@@ -1,0 +1,44 @@
+name: Auto Release
+description: Github Auto Tag and Release Creation
+
+inputs:
+  user_email:
+    description: "User email for git config"
+    required: true
+  user_name:
+    description: "User name for git config"
+    required: true
+  release_type:
+    description: "Type of action, can be 'auto' for minor or 'major' for major version update"
+    required: true
+    default: "auto"
+  version_format:
+    description: "Version format, can be 'single' for v1, v2, etc., or 'major.minor' for standard format"
+    required: true
+    default: "major.minor"
+
+# outputs:
+#   new_tag:
+#     description: "The newly created tag"
+
+runs:
+  using: "composite"
+  steps:
+  - name: Checkout Code
+    uses: actions/checkout@v3
+
+  - name: Set Git Config
+    run: |
+      git config --global user.email "${{ inputs.user_email }}"
+      git config --global user.name "${{ inputs.user_name }}"
+    shell: bash
+
+  - name: Check for Existing Tags and Create
+    id: check_tags
+    run: |
+      tags=$(git ls-remote --tags origin)
+      if [ -z "$tags" ]; then
+        echo "No tags found."
+    shell: bash
+
+
