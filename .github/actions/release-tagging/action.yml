@@ -57,7 +57,13 @@ runs:
         remote_tags="$(git ls-remote --tags origin | grep 'refs/tags/' | grep -v '\^{}' | awk -F'/' '{print $NF}' | sort -V | tail -n 1)"
         echo "$remote_tags"
         echo "Tags found. Skipping initial tag creation."
-
+        if [[ "$remote_tags" =~ ^v[0-9]+\.[0-9]+$ ]]; then
+          echo "The tag $remote_tags is in major.minor format."
+        elif [[ "$remote_tags" =~ ^v[0-9]+$ ]]; then
+          echo "The tag $remote_tags is in single format."
+        else
+          echo "The tag $remote_tags does not match expected formats."
+        fi
       fi
     shell: bash
 
