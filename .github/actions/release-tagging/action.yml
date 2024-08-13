@@ -39,6 +39,7 @@ runs:
       tags=$(git ls-remote --tags origin)
       if [ -z "$tags" ]; then
         echo "No tags found."
+      fi
     shell: bash
 
 
