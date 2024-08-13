@@ -56,9 +56,8 @@ runs:
       else
         remote_tags="$(git ls-remote --tags origin | grep 'refs/tags/' | grep -v '\^{}' | awk -F'/' '{print $NF}' | sort -V | tail -n 1)"
         echo "$remote_tags"
-        is_major_minor=null
 
-        echo "Tags found. Skipping initial tag creation."
+        is_major_minor=null
         if [[ "$remote_tags" =~ ^v[0-9]+\.[0-9]+$ ]]; then
           is_major_minor=true
         elif [[ "$remote_tags" =~ ^v[0-9]+$ ]]; then
@@ -67,6 +66,40 @@ runs:
           echo "The tag $remote_tags does not match expected formats."
         fi
         echo "$is_major_minor"
+
+        # Function to convert major.minor format to single format and increment major
+        convert_major_minor_to_single() {
+          local tag="$1"
+          local major=$(echo "$tag" | sed -E 's/v([0-9]+)\.[0-9]+/\1/')
+          local new_major=$((major + 1))
+          echo "v$new_major"
+        }
+
+        # Function to convert single format to major.minor format
+        convert_single_to_major_minor() {
+          local tag="$1"
+          local major=$(echo "$tag" | sed -E 's/v([0-9]+).*/\1/')
+          echo "v$major.0"
+        }
+
+        # Determine the new tag based on the format and version_format input
+        if [ "$is_major_minor" = true ]; then
+          if [ "$version_format" = "single" ]; then
+            new_tag=$(convert_major_minor_to_single "$remote_tags")
+          else
+            new_tag="$remote_tags"  # Keep as it is
+          fi
+        else
+          if [ "$version_format" = "major.minor" ]; then
+            new_tag=$(convert_single_to_major_minor "$remote_tags")
+            new_tag=$(increment_major_version "$new_tag")  # Increment major for major.minor format
+          else
+            new_tag="$remote_tags"  # Keep as it is
+          fi
+        fi        
+
+        echo "$new_tag"
+
       fi
     shell: bash
 
